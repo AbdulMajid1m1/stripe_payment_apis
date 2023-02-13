@@ -1,0 +1,25 @@
+{
+  "name": "my_stripe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Abdul Majid",
+  "license": "ISC",
+  "dependencies": {
+    "@stripe/react-stripe-js": "^1.16.4",
+    "@stripe/stripe-js": "github:stripe/stripe-js",
+    "axios": "^1.3.2",
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "dotenv-webpack": "^8.0.1",
+    "express": "^4.18.2",
+    "joi": "^17.7.1",
+    "stripe": "^11.10.0"
+  }
+}
