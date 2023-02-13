@@ -2,7 +2,7 @@ const express = require('express')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const router = express.Router()
 const joi = require('joi')
-const BaseUrl = "http://localhost:9000"
+const BaseUrl = "https://stripe-payment.herokuapp.com"
 router.post('/create-checkout-session', async (req, res) => {
     const value = joi.object({
         lookup_key: joi.string().required(),
