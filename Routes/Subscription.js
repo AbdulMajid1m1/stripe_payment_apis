@@ -2,6 +2,7 @@ const express = require('express')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const router = express.Router()
 const joi = require('joi')
+// const BaseUrl = 'http://localhost:9000'
 const BaseUrl = "https://stripe-payment.herokuapp.com"
 router.post('/create-checkout-session', async (req, res) => {
     const value = joi.object({
@@ -61,6 +62,7 @@ router.post('/create-checkout-session', async (req, res) => {
             });
 
             res.json({ sessionId: session.id });
+
         }
         else {
             console.log("auto renew is not set")
@@ -74,13 +76,45 @@ router.post('/create-checkout-session', async (req, res) => {
 });
 
 
-router.get('/success', (req, res) => {
-    res.json({ success: true, message: "Payment Successful", session_id: req.query.session_id })
+router.get('/success', async (req, res) => {
+    // use session_id to fetch the customer details from stripe 
+    const session_id = req.query.session_id
+    try {
+
+
+        console.log("session id " + session_id)
+        // create customer object to store customerStripeId  to charge the customer later
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+
+
+
+
+        console.log("session is " + session)
+
+        // chech if pyamentMethod is equal to session.sesssion.payment_intent
+        // const paymentIntent = await stripe.paymentIntents.create({
+        //     amount: 2000, // replace with actual amount in cents
+        //     currency: 'usd', // replace with actual currency code
+        //     payment_method: paymentMethod.id,
+        //     customer: customer.id,
+        //     confirm: true,
+        //   });
+
+
+        res.json({
+            success: true, message: "Payment Successful", session_id: req.query.session_id,
+            session: session
+        })
+    } catch (err) {
+        console.log("Error " + err.message)
+        return res.status(500).json({ success: false, error: err.message });
+    }
 })
 
 router.get('/cancel', (req, res) => {
     res.json({ success: false, message: "Payment Cancelled" })
 })
+
 
 module.exports = router
 
