@@ -85,22 +85,7 @@ router.get('/success', async (req, res) => {
         console.log("session id " + session_id)
         // create customer object to store customerStripeId  to charge the customer later
         const session = await stripe.checkout.sessions.retrieve(session_id);
-
-
-
-
         console.log("session is " + session)
-
-        // chech if pyamentMethod is equal to session.sesssion.payment_intent
-        // const paymentIntent = await stripe.paymentIntents.create({
-        //     amount: 2000, // replace with actual amount in cents
-        //     currency: 'usd', // replace with actual currency code
-        //     payment_method: paymentMethod.id,
-        //     customer: customer.id,
-        //     confirm: true,
-        //   });
-
-
         res.json({
             success: true, message: "Payment Successful", session_id: req.query.session_id,
             session: session

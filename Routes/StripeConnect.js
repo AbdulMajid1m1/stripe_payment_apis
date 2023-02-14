@@ -30,7 +30,9 @@ router.post("/connect-account", async (req, res) => {
         });
         console.log(accountLinks.url)
         res.status(200).json({
+            success: true,
             url: accountLinks.url,
+            accountID: account.id,
         });
     } catch (error) {
         res.status(500).send({
