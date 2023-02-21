@@ -2,14 +2,13 @@ const express = require('express')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const router = express.Router()
 const joi = require('joi')
-// const BaseUrl = 'http://localhost:9000'
-const BaseUrl = "https://stripe-payment.herokuapp.com"
+// const BaseUrl = "https://stripe-payment.herokuapp.com"
+const BaseUrl = 'http://localhost:9000'
 router.post('/create-checkout-session', async (req, res) => {
     const value = joi.object({
         lookup_key: joi.string().required(),
         autoRenew: joi.boolean().required()
     }).validate(req.body)
-
     if (value.error) {
         console.log('type error ' + value.error.message)
         return res.status(400).json({ success: false, error: value.error.message })
@@ -20,11 +19,13 @@ router.post('/create-checkout-session', async (req, res) => {
 
     // Fetch the price information from Stripe
     try {
+
+
         const price = await stripe.prices.retrieve(lookup_key);
 
         // Fetch the plan information from Stripe
 
-        if (autoRenew || autoRenew === "true") {
+        if (autoRenew === true || autoRenew === "true") {
 
             const planData = await stripe.plans.retrieve(price.id);
             plan = planData;
@@ -43,7 +44,10 @@ router.post('/create-checkout-session', async (req, res) => {
             });
 
             res.json({ sessionId: session.id });
-        } else if (!autoRenew || autoRenew === "false") {
+            // } else if (!autoRenew || autoRenew === "false") {
+
+
+        } else if (autoRenew === false || autoRenew === "false") {
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
                 line_items: [
